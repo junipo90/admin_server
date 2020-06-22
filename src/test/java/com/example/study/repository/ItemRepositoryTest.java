@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @SpringBootTest
@@ -20,9 +21,17 @@ public class ItemRepositoryTest {
     @Test
     public void create() {
         Item item = new Item();
-        item.setName("노트북");
+        item.setStatus("UNREGISTERED");
+        item.setName("애플 노트북");
+        item.setTitle("맥북 프로 2018");
+        item.setContent("Mac Pro 2018");
         item.setPrice(100000);
-        item.setContent("맥북");
+        item.setBrandName("apple");
+        item.setRegisteredAt(LocalDateTime.now());
+        item.setCreatedAt(LocalDateTime.now());
+        item.setCreatedBy("Partner01");
+
+//        item.setPartnerId(1L);
 
         Item saveItem = itemRepository.save(item);
         Assert.assertNotNull(saveItem);
