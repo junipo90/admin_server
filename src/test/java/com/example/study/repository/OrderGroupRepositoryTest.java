@@ -7,9 +7,11 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -38,5 +40,17 @@ public class OrderGroupRepositoryTest {
 
         OrderGroup saveOrderGroup = orderGroupRepository.save(orderGroup);
         Assert.assertNotNull(saveOrderGroup);
+    }
+
+    @Test
+    @Transactional
+    public void read(){
+        Optional<OrderGroup> orderGroup = orderGroupRepository.findById(1L);
+        orderGroup.ifPresent(orderGroup1 -> {
+            System.out.println(orderGroup1.getRevAddress());
+            System.out.println(orderGroup1.getPaymentType());
+        });
+        Assert.assertNotNull(orderGroup);
+
     }
 }

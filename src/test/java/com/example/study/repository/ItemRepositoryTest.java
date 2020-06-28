@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -25,7 +26,7 @@ public class ItemRepositoryTest {
         item.setName("애플 노트북");
         item.setTitle("맥북 프로 2018");
         item.setContent("Mac Pro 2018");
-        item.setPrice(100000);
+        item.setPrice(BigDecimal.valueOf(100000));
         item.setBrandName("apple");
         item.setRegisteredAt(LocalDateTime.now());
         item.setCreatedAt(LocalDateTime.now());
