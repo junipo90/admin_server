@@ -3,12 +3,12 @@ package com.example.study.model.enumclass;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@AllArgsConstructor
 @Getter
-public enum  UserStatus {
+@AllArgsConstructor
+public enum OrderType {
 
-    REGISTERED(0, "등록", "사용자 등록 상태"),
-    UNREGISTERED(1, "해지", "사용자 해지 상태");
+    ALL(0, "묶음", "모든 상품을 묶음 발송"),
+    EACH(1, "개별", "상품을 개별 발송");
 
     private Integer id;
     private String title;

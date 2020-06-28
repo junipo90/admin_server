@@ -13,10 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 @Service
-public class PartnerApiLogicService implements CrudInterface<PartnerApiRequest, PartnerApiResponse> {
-
-    @Autowired
-    PartnerRepository partnerRepository;
+public class PartnerApiLogicService extends BaseService<PartnerApiRequest, PartnerApiResponse, Partner> {
 
     @Autowired
     CategoryRepository categoryRepository;
@@ -35,13 +32,13 @@ public class PartnerApiLogicService implements CrudInterface<PartnerApiRequest, 
                 .registeredAt(LocalDateTime.now())
                 .category(categoryRepository.getOne(partnerApiRequest.getCategoryId()))
                 .build();
-        Partner newPartner = partnerRepository.save(partner);
+        Partner newPartner = baseRepository.save(partner);
         return response(newPartner);
     }
 
     @Override
     public Header<PartnerApiResponse> read(Long id) {
-        return partnerRepository.findById(id)
+        return baseRepository.findById(id)
                 .map(partner -> response(partner))
                 .orElseGet(() -> Header.ERROR("데이터 없음"));
     }
@@ -49,7 +46,7 @@ public class PartnerApiLogicService implements CrudInterface<PartnerApiRequest, 
     @Override
     public Header<PartnerApiResponse> update(Header<PartnerApiRequest> request) {
         PartnerApiRequest partnerApiRequest = request.getData();
-        return partnerRepository.findById(partnerApiRequest.getId())
+        return baseRepository.findById(partnerApiRequest.getId())
                 .map(partner -> {
                     partner.setName(partnerApiRequest.getName())
                             .setStatus(partnerApiRequest.getStatus())
@@ -61,16 +58,16 @@ public class PartnerApiLogicService implements CrudInterface<PartnerApiRequest, 
                             .setRegisteredAt(partnerApiRequest.getRegisteredAt())
                             .setUnregisteredAt(partnerApiRequest.getUnregisteredAt())
                             .setCategory(categoryRepository.getOne(partnerApiRequest.getCategoryId()));
-                    Partner savePartner = partnerRepository.save(partner);
+                    Partner savePartner = baseRepository.save(partner);
                     return response(savePartner);
                 }).orElseGet(() -> Header.ERROR("데이터 없음"));
     }
 
     @Override
     public Header delete(Long id) {
-        return partnerRepository.findById(id)
+        return baseRepository.findById(id)
                 .map(partner -> {
-                    partnerRepository.delete(partner);
+                    baseRepository.delete(partner);
                     return Header.OK();
                 }).orElseGet(() -> Header.ERROR("데이터 없음"));
     }

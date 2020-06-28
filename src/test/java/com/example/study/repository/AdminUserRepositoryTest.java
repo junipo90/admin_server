@@ -1,6 +1,7 @@
 package com.example.study.repository;
 
 import com.example.study.model.entity.AdminUser;
+import com.example.study.model.enumclass.AdminUserStatus;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +24,7 @@ public class AdminUserRepositoryTest {
         AdminUser adminUser = new AdminUser();
         adminUser.setAccount("AdminUser02");
         adminUser.setPassword("AdminUser02");
-        adminUser.setStatus("REGISTERED");
+        adminUser.setStatus(AdminUserStatus.REGISTERED);
         adminUser.setRole("SUPER");
 //        adminUser.setCreatedAt(LocalDateTime.now());
 //        adminUser.setCreatedBy("AdminServer");

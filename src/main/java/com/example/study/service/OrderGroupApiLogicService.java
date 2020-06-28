@@ -13,10 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 @Service
-public class OrderGroupApiLogicService implements CrudInterface<OrderGroupApiRequest, OrderGroupApiResponse> {
-
-    @Autowired
-    OrderGroupRepository orderGroupRepository;
+public class OrderGroupApiLogicService extends BaseService<OrderGroupApiRequest, OrderGroupApiResponse, OrderGroup> {
 
     @Autowired
     UserRepository userRepository;
@@ -36,14 +33,14 @@ public class OrderGroupApiLogicService implements CrudInterface<OrderGroupApiReq
                 .arrivalDate(requestData.getArrivalDate())
                 .user(userRepository.getOne(requestData.getUserId()))
                 .build();
-        OrderGroup newOrderGroup = orderGroupRepository.save(orderGroup);
+        OrderGroup newOrderGroup = baseRepository.save(orderGroup);
 
         return response(newOrderGroup);
     }
 
     @Override
     public Header<OrderGroupApiResponse> read(Long id) {
-        return orderGroupRepository.findById(id)
+        return baseRepository.findById(id)
                 .map(orderGroup -> response(orderGroup))
                 .orElseGet(() -> Header.ERROR("데이터 없음"));
     }
@@ -51,7 +48,7 @@ public class OrderGroupApiLogicService implements CrudInterface<OrderGroupApiReq
     @Override
     public Header<OrderGroupApiResponse> update(Header<OrderGroupApiRequest> request) {
         OrderGroupApiRequest orderGroupApiRequest = request.getData();
-        return orderGroupRepository.findById(orderGroupApiRequest.getId())
+        return baseRepository.findById(orderGroupApiRequest.getId())
                 .map(orderGroup -> {
                     orderGroup.setStatus(orderGroupApiRequest.getStatus())
                             .setOrderType(orderGroupApiRequest.getOrderType())
@@ -65,16 +62,16 @@ public class OrderGroupApiLogicService implements CrudInterface<OrderGroupApiReq
                             .setUser(userRepository.getOne(orderGroupApiRequest.getUserId()));
                     return orderGroup;
                 })
-                .map(orderGroup -> orderGroupRepository.save(orderGroup))
+                .map(orderGroup -> baseRepository.save(orderGroup))
                 .map(orderGroup -> response(orderGroup))
                 .orElseGet(() -> Header.ERROR("데이터 없음"));
     }
 
     @Override
     public Header delete(Long id) {
-        return orderGroupRepository.findById(id)
+        return baseRepository.findById(id)
                 .map(orderGroup -> {
-                    orderGroupRepository.delete(orderGroup);
+                    baseRepository.delete(orderGroup);
                     return Header.OK();
                 })
                 .orElseGet(() -> Header.ERROR("데이터 없음"));

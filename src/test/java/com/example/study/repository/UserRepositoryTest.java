@@ -1,6 +1,7 @@
 package com.example.study.repository;
 
 import com.example.study.model.entity.User;
+import com.example.study.model.enumclass.UserStatus;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +25,7 @@ public class UserRepositoryTest {
 
         String account = "TestUser01";
         String password = "TestUser01_password";
-        String status = "REGISTERED";
+        UserStatus status = UserStatus.REGISTERED;
         String email = "TestUser01@gmail.com";
         String phoneNumber = "010-111-1111";
         LocalDateTime registeredAt = LocalDateTime.now();

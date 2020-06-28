@@ -1,6 +1,7 @@
 package com.example.study.repository;
 
 import com.example.study.model.entity.Item;
+import com.example.study.model.enumclass.ItemStatus;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +23,7 @@ public class ItemRepositoryTest {
     @Test
     public void create() {
         Item item = new Item();
-        item.setStatus("UNREGISTERED");
+        item.setStatus(ItemStatus.REGISTERED);
         item.setName("애플 노트북");
         item.setTitle("맥북 프로 2018");
         item.setContent("Mac Pro 2018");

@@ -1,21 +1,15 @@
 package com.example.study.service;
 
-import com.example.study.ifs.CrudInterface;
 import com.example.study.model.entity.AdminUser;
 import com.example.study.model.network.Header;
 import com.example.study.model.network.request.AdminUserAPiRequest;
 import com.example.study.model.network.response.AdminUserAPiResponse;
-import com.example.study.repository.AdminUserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
 @Service
-public class AdminUserApiLogicService implements CrudInterface<AdminUserAPiRequest, AdminUserAPiResponse> {
-
-    @Autowired
-    AdminUserRepository adminUserRepository;
+public class AdminUserApiLogicService extends BaseService<AdminUserAPiRequest, AdminUserAPiResponse, AdminUser> {
 
     @Override
     public Header<AdminUserAPiResponse> create(Header<AdminUserAPiRequest> request) {
@@ -30,14 +24,14 @@ public class AdminUserApiLogicService implements CrudInterface<AdminUserAPiReque
                 .loginFailCount(adminUserAPiRequest.getLoginFailCount())
                 .registeredAt(LocalDateTime.now())
                 .build();
-        AdminUser newAdminUser = adminUserRepository.save(adminUser);
+        AdminUser newAdminUser = baseRepository.save(adminUser);
 
         return response(newAdminUser);
     }
 
     @Override
     public Header<AdminUserAPiResponse> read(Long id) {
-        return adminUserRepository.findById(id)
+        return baseRepository.findById(id)
                 .map(adminUser -> response(adminUser))
                 .orElseGet(() -> Header.ERROR("데이터 없음"));
     }
@@ -45,7 +39,7 @@ public class AdminUserApiLogicService implements CrudInterface<AdminUserAPiReque
     @Override
     public Header<AdminUserAPiResponse> update(Header<AdminUserAPiRequest> request) {
         AdminUserAPiRequest adminUserAPiRequest = request.getData();
-        return adminUserRepository.findById(adminUserAPiRequest.getId())
+        return baseRepository.findById(adminUserAPiRequest.getId())
                 .map(adminUser -> {
                     adminUser.setAccount(adminUserAPiRequest.getAccount())
                             .setPassword(adminUserAPiRequest.getPassword())
@@ -56,7 +50,7 @@ public class AdminUserApiLogicService implements CrudInterface<AdminUserAPiReque
                             .setLoginFailCount(adminUserAPiRequest.getLoginFailCount())
                             .setRegisteredAt(adminUserAPiRequest.getRegisteredAt())
                             .setUnregisteredAt(adminUserAPiRequest.getUnregisteredAt());
-                    AdminUser saveAdminUser = adminUserRepository.save(adminUser);
+                    AdminUser saveAdminUser = baseRepository.save(adminUser);
                     return saveAdminUser;
                 })
                 .map(adminUser -> response(adminUser))
@@ -65,8 +59,8 @@ public class AdminUserApiLogicService implements CrudInterface<AdminUserAPiReque
 
     @Override
     public Header delete(Long id) {
-        return adminUserRepository.findById(id).map(adminUser -> {
-            adminUserRepository.delete(adminUser);
+        return baseRepository.findById(id).map(adminUser -> {
+            baseRepository.delete(adminUser);
             return Header.OK();
         }).orElseGet(() -> Header.ERROR("데이터 없음"));
     }
