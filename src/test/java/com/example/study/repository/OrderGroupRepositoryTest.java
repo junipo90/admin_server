@@ -1,6 +1,9 @@
 package com.example.study.repository;
 
 import com.example.study.model.entity.OrderGroup;
+import com.example.study.model.enumclass.OrderGroupStatus;
+import com.example.study.model.enumclass.OrderType;
+import com.example.study.model.enumclass.PaymentType;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,11 +26,11 @@ public class OrderGroupRepositoryTest {
     @Test
     public void create(){
         OrderGroup orderGroup = new OrderGroup();
-        orderGroup.setStatus("COMPLETE");
-        orderGroup.setOrderType("ALL");
+        orderGroup.setStatus(OrderGroupStatus.COMPLETE);
+        orderGroup.setOrderType(OrderType.ALL);
         orderGroup.setRevAddress("서울시 강남구");
         orderGroup.setRevName("이순신");
-        orderGroup.setPaymentType("CARD");
+        orderGroup.setPaymentType(PaymentType.CARD);
         orderGroup.setTotalPrice(BigDecimal.valueOf(100000));
         orderGroup.setTotalQuantity(1);
         orderGroup.setOrderAt(LocalDateTime.now().minusDays(2));

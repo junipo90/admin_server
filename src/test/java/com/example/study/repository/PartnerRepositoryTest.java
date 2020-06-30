@@ -1,6 +1,7 @@
 package com.example.study.repository;
 
 import com.example.study.model.entity.Partner;
+import com.example.study.model.enumclass.PartnerStatus;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +21,6 @@ public class PartnerRepositoryTest {
     @Test
     public void create(){
         String name = "Partner01";
-        String status = "REGISTERED";
         String address = "군포시 산본역";
         String callCenter = "070-111-1111";
         String partnerNumber = "010-111-1111";
@@ -32,7 +32,7 @@ public class PartnerRepositoryTest {
 
         Partner partner = new Partner();
         partner.setName(name);
-        partner.setStatus(status);
+        partner.setStatus(PartnerStatus.REGISTERED);
         partner.setAddress(address);
         partner.setCallCenter(callCenter);
         partner.setPartnerNumber(partnerNumber);

@@ -1,6 +1,7 @@
 package com.example.study.repository;
 
 import com.example.study.model.entity.OrderDetail;
+import com.example.study.model.enumclass.OrderDetailStatus;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +22,7 @@ public class OrderDetailRepositoryTest {
     @Test
     public void create(){
         OrderDetail orderDetail = new OrderDetail();
-        orderDetail.setStatus("WAITING");
+        orderDetail.setStatus(OrderDetailStatus.CONFIRM);
         orderDetail.setArrivalDate(LocalDateTime.now().plusDays(2));
         orderDetail.setQuantity(10);
         orderDetail.setTotalPrice(BigDecimal.valueOf(1000000));

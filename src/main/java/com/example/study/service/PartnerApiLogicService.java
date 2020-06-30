@@ -1,16 +1,19 @@
 package com.example.study.service;
 
-import com.example.study.ifs.CrudInterface;
 import com.example.study.model.entity.Partner;
 import com.example.study.model.network.Header;
+import com.example.study.model.network.Pagination;
 import com.example.study.model.network.request.PartnerApiRequest;
 import com.example.study.model.network.response.PartnerApiResponse;
 import com.example.study.repository.CategoryRepository;
-import com.example.study.repository.PartnerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PartnerApiLogicService extends BaseService<PartnerApiRequest, PartnerApiResponse, Partner> {
@@ -21,7 +24,7 @@ public class PartnerApiLogicService extends BaseService<PartnerApiRequest, Partn
     @Override
     public Header<PartnerApiResponse> create(Header<PartnerApiRequest> request) {
         PartnerApiRequest partnerApiRequest = request.getData();
-        Partner partner =Partner.builder()
+        Partner partner = Partner.builder()
                 .name(partnerApiRequest.getName())
                 .status(partnerApiRequest.getStatus())
                 .address(partnerApiRequest.getAddress())
@@ -33,13 +36,13 @@ public class PartnerApiLogicService extends BaseService<PartnerApiRequest, Partn
                 .category(categoryRepository.getOne(partnerApiRequest.getCategoryId()))
                 .build();
         Partner newPartner = baseRepository.save(partner);
-        return response(newPartner);
+        return Header.OK(response(newPartner));
     }
 
     @Override
     public Header<PartnerApiResponse> read(Long id) {
         return baseRepository.findById(id)
-                .map(partner -> response(partner))
+                .map(partner -> Header.OK(response(partner)))
                 .orElseGet(() -> Header.ERROR("데이터 없음"));
     }
 
@@ -59,7 +62,7 @@ public class PartnerApiLogicService extends BaseService<PartnerApiRequest, Partn
                             .setUnregisteredAt(partnerApiRequest.getUnregisteredAt())
                             .setCategory(categoryRepository.getOne(partnerApiRequest.getCategoryId()));
                     Partner savePartner = baseRepository.save(partner);
-                    return response(savePartner);
+                    return Header.OK(response(savePartner));
                 }).orElseGet(() -> Header.ERROR("데이터 없음"));
     }
 
@@ -72,7 +75,7 @@ public class PartnerApiLogicService extends BaseService<PartnerApiRequest, Partn
                 }).orElseGet(() -> Header.ERROR("데이터 없음"));
     }
 
-    private Header<PartnerApiResponse> response(Partner partner){
+    private PartnerApiResponse response(Partner partner) {
         PartnerApiResponse partnerApiResponse = PartnerApiResponse.builder()
                 .id(partner.getId())
                 .name(partner.getName())
@@ -86,6 +89,24 @@ public class PartnerApiLogicService extends BaseService<PartnerApiRequest, Partn
                 .unregisteredAt(partner.getUnregisteredAt())
                 .categoryId(partner.getCategory().getId())
                 .build();
-        return Header.OK(partnerApiResponse);
+        return partnerApiResponse;
+    }
+
+    public Header<List<PartnerApiResponse>> search(Pageable pageable) {
+        Page<Partner> partners = baseRepository.findAll(pageable);
+
+        List<PartnerApiResponse> partnerApiResponseList = partners.stream()
+                .map(partner -> response(partner))
+                .collect(Collectors.toList());
+
+        Pagination pagination = Pagination.builder()
+                .totalPages(partners.getTotalPages())
+                .totalElements(partners.getTotalElements())
+                .currentPage(partners.getNumber())
+                .currentElements(partners.getNumberOfElements())
+                .build();
+
+        return Header.OK(partnerApiResponseList, pagination);
+
     }
 }
